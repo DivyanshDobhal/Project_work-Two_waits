@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+## TwoWaits — Travel Platform (Frontend + Backend)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains a React frontend and a Node/Express backend for the TwoWaits travel website. The project was originally scaffolded with Create React App for the frontend and uses a small Express API backend with Mongoose models for authentication and data endpoints.
 
-## Available Scripts
+This README describes the project structure, available dashboards, routes, components, how to run locally, build steps, and notes for integrating real backend APIs.
 
-In the project directory, you can run:
+Project status: UI dashboards scaffolded, lazy-loaded routes implemented, API service stubs added (Axios + fallback mocks). The code was pushed to GitHub and is ready for backend integration and polishing.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Key features
+- Modern React SPA using React Router v5
+- Lazy-loaded dashboard pages and Suspense fallbacks
+- Reusable dashboard layout components (Sidebar, Topbar)
+- Six production-style dashboards (Worldwide Tours, Travel Planning, Hotel Booking, Flight Booking, Travel Insurance, Support)
+- Lightweight chart and table components with skeleton/loading states
+- Axios-based API service modules with graceful fallback mocks
+- Responsive layout and theme consistent with existing Navbar/Footer
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Tech stack
+- Frontend: React 17, react-router-dom v5, react-scripts (CRA)
+- Styling: CSS modules / component CSS (existing project styles)
+- HTTP client: Axios
+- Backend: Node.js + Express (small API server in `backend/`)
+- Database: MongoDB / Mongoose (backend models present)
 
-### `npm test`
+## Project structure (important files)
+- `frontend/` — React app
+	- `src/App.js` — app routes + lazy dashboard imports
+	- `src/components/dashboard/` — reusable layout and small UI components
+	- `src/components/dashboard/pages/` — dashboard pages (WorldwideTours, TravelPlanning, HotelBooking, FlightBooking, TravelInsurance, Support)
+	- `src/api/dashboardService.js` — Axios service stubs with mock fallbacks
+	- `public/images/` — project images used by UI
+- `backend/` — Express API, auth routes, Mongoose models, tests
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Dashboard routes
+Each service card on the `/services` page links to a complete dashboard:
 
-### `npm run build`
+- `/dashboard/worldwide-tours` — Worldwide Tours dashboard
+- `/dashboard/travel-planning` — Travel Planning dashboard
+- `/dashboard/hotel-booking` — Hotel Booking dashboard
+- `/dashboard/flight-booking` — Flight Booking dashboard
+- `/dashboard/travel-insurance` — Travel Insurance dashboard
+- `/dashboard/support` — Support dashboard
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How to run locally
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Install dependencies (from repository root):
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+cd twowaits_website/frontend
+npm install
+cd ../backend
+npm install
+```
 
-### `npm run eject`
+2. Start backend (default port configured in backend):
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+cd twowaits_website/backend
+npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Start frontend dev server:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```bash
+cd twowaits_website/frontend
+npm start
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Open http://localhost:3000 and navigate to `/services` to access the Services page. Click any card's "Open" button to jump to its dashboard. Dashboard routes are lazy-loaded and show a fallback while loading.
 
-## Learn More
+## Build for production
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+From `frontend/`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm run build
+```
 
-### Code Splitting
+Serve the `build/` folder with a static server (for example `serve -s build`) or integrate into your preferred hosting.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## API services and integration notes
 
-### Analyzing the Bundle Size
+- The frontend includes `src/api/dashboardService.js` which uses Axios and implements `withFallback` behavior returning mock data when the backend is unreachable. Replace the endpoints with your backend API paths when available.
+- Example endpoints expected by the stubs (backend should implement):
+	- `GET /api/tours/overview`
+	- `GET /api/tours/chart`
+	- `GET /api/bookings/recent`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Place real implementations in `backend/routes/` and update `frontend/src/api/dashboardService.js` to remove fallbacks.
 
-### Making a Progressive Web App
+## Development notes & next steps
+- Connect service stubs to real backend endpoints and implement server-side pagination for tables.
+- Replace simple chart placeholders with a charting library (Recharts/Chart.js) for interactive charts.
+- Add authentication guards for `/dashboard/*` routes (JWT-based). The backend already contains auth routes and middleware scaffolding.
+- Improve accessibility (aria attributes, keyboard navigation) and add unit/integration tests for dashboard components.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contributing
+- Fork the repository, create a feature branch, and open a pull request describing your changes.
 
-### Advanced Configuration
+## License
+- This repository currently does not include an explicit license file. Add `LICENSE` if you want to apply an open-source license.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+If you want, I can:
+- Wire the dashboard service stubs to actual backend endpoints (provide API specs),
+- Add richer charts using `recharts`, or
+- Implement route protection with a local JWT mock for testing.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+If you'd like me to commit and push this README update, I can do that now.
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
